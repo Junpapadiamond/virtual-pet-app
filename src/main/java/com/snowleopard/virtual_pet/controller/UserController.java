@@ -21,21 +21,21 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/api/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<UserResponse>> getUser(@PathVariable String userId) {
         log.info("Getting user with id: {}", userId);
         UserResponse user = userService.getUserById(userId);
         return ResponseEntity.ok(ApiResponse.success("User retrieved successfully", user));
     }
 
-    @GetMapping("/api/username/{username}")
+    @GetMapping("/username/{username}")
     public ResponseEntity<ApiResponse<UserResponse>> getUserByUsername(@PathVariable String username) {
         log.info("Getting user with username: {}", username);
         UserResponse user = userService.getUserByUsername(username);
         return ResponseEntity.ok(ApiResponse.success("User retrieved successfully", user));
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> createUser(@Valid @RequestBody CreateUserRequest request) {
         log.info("Registering new user: {}", request.getUsername());
         UserResponse user = userService.createUser(request);
@@ -43,14 +43,14 @@ public class UserController {
                 .body(ApiResponse.success("User created successfully", user));
     }
 
-    @PostMapping("/api/{userId}/login")
+    @PostMapping("/{userId}/login")
     public ResponseEntity<ApiResponse<UserResponse>> updateLastLogin(@PathVariable String userId) {
         log.info("Updating last login for user: {}", userId);
         UserResponse user = userService.updateLastLogin(userId);
         return ResponseEntity.ok(ApiResponse.success("Login updated successfully", user));
     }
 
-    @PostMapping("/api/{userId}/experience")
+    @PostMapping("/{userId}/experience")
     public ResponseEntity<ApiResponse<UserResponse>> addExperience(
             @PathVariable String userId,
             @RequestParam Integer experience) {
@@ -59,7 +59,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("Experience added successfully", user));
     }
 
-    @PostMapping("/api/{userId}/pets/{petId}")
+    @PostMapping("/{userId}/pets/{petId}")
     public ResponseEntity<ApiResponse<UserResponse>> addPetToUser(
             @PathVariable String userId,
             @PathVariable String petId) {
@@ -68,7 +68,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("Pet added to user successfully", user));
     }
 
-    @GetMapping("/api/health")
+    @GetMapping("/health")
     public ResponseEntity<ApiResponse<String>> healthCheck() {
         return ResponseEntity.ok(ApiResponse.success("User service is healthy"));
     }
