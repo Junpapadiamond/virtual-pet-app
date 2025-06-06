@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: virtual-pet-prod
+  
+  # Production MongoDB
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/virtualpet}
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      database: 0
+
+# Production logging
+logging:
+  level:
+    com.snowleopard.virtual_pet: INFO
+    org.springframework.web: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    name: logs/virtual-pet.log
+
+# Production settings
+virtual-pet:
+  game:
+    max-pets-per-user: 5
+    starting-coins: 500
+    level-up-experience: 100
+  
+  degradation:
+    hunger-rate: 2
+    happiness-rate: 1
+    energy-regen-rate: 5
+
+# Limited actuator endpoints for production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

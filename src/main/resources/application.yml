@@ -1,0 +1,86 @@
+# Fixed application.yml - All spring configs merged under one key
+spring:
+  profiles:
+    active: dev  # Default to development profile
+  
+  # Application name
+  application:
+    name: virtual-pet-app
+
+  # JSON configuration
+  jackson:
+    time-zone: UTC
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+
+  # Security configuration
+  security:
+    user:
+      name: admin
+      password: admin123
+      roles: ADMIN
+
+# Server configuration
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param
+
+# CORS configuration
+cors:
+  allowed-origins: "http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000"
+  allowed-methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600
+
+# Actuator endpoints for monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+  info:
+    env:
+      enabled: true
+
+# Logging configuration
+logging:
+  pattern:
+    console: "%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+  level:
+    com.snowleopard.virtual_pet: INFO
+    org.springframework.security: WARN
+    org.springframework.web: WARN
+    org.mongodb.driver: WARN
+
+# Virtual Pet Game Configuration
+virtual-pet:
+  game:
+    max-pets-per-user: 5
+    starting-coins: 500
+    level-up-experience: 100
+    max-level: 50
+
+  degradation:
+    hunger-rate: 2
+    happiness-rate: 1
+    health-rate: 0.5
+    energy-regen-rate: 5
+
+  intervals:
+    degradation-check: "0 */5 * * * *"
+    status-update: "0 */1 * * * *"
+
+  notifications:
+    low-stat-threshold: 20
+    critical-threshold: 10

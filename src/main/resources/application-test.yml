@@ -1,0 +1,59 @@
+server:
+  port: 0  # Random port for testing
+
+spring:
+  application:
+    name: virtual-pet-test
+
+  # Use embedded MongoDB for testing
+  data:
+    mongodb:
+      host: localhost
+      port: 0  # Will be set by embedded MongoDB
+      database: virtualpet-test
+
+  # Use embedded Redis for testing
+  data:
+    redis:
+      host: localhost
+      port: 0  # Will be set by embedded Redis
+      timeout: 2000ms
+      database: 1  # Different database for testing
+
+  # Disable security for testing
+  security:
+    user:
+      name: test
+      password: test
+      roles: USER
+
+# Embedded MongoDB Configuration for Testing
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.4
+        storage:
+          database-dir: target/mongodb-test
+          repl-set-name: rs0
+
+# Logging for tests
+logging:
+  level:
+    com.snowleopard.virtualpet: INFO
+    de.flapdoodle.embed.mongo: WARN
+    org.springframework.data: WARN
+    org.springframework.cache: WARN
+  pattern:
+    console: "%d{HH:mm:ss} - %msg%n"
+
+# Disable AI features in tests
+virtual-pet:
+  ai:
+    enabled: false
+
+  # Faster degradation for testing
+  degradation:
+    hunger-rate: 10
+    happiness-rate: 5
+    energy-regen-rate: 15
