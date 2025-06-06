@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Pet App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .status {
+      color: #28a745;
+      font-weight: bold;
+    }
+    .api-link {
+      display: inline-block;
+      margin: 10px 0;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .api-link:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🐾 Virtual Pet Application</h1>
+  <p class="status">✅ Backend is running successfully!</p>
+
+  <h2>Available API Endpoints:</h2>
+  <div>
+    <a href="/actuator/health" class="api-link">Health Check</a>
+    <a href="/actuator/info" class="api-link">Application Info</a>
+    <a href="/api/game/pet-types" class="api-link">Pet Types</a>
+    <a href="/api/game/activity-types" class="api-link">Activity Types</a>
+  </div>
+
+  <h2>Frontend Development:</h2>
+  <p>To run the React frontend:</p>
+  <pre style="background: #f8f9fa; padding: 15px; border-radius: 4px;">
+cd frontend/virtual-pet-ui
+npm install
+npm run dev</pre>
+
+  <p>Then visit: <a href="http://localhost:5173">http://localhost:5173</a></p>
+
+  <h2>Testing the API:</h2>
+  <p>You can test the API endpoints directly or use the React frontend once it's running.</p>
+</div>
+</body>
+</html>
