@@ -1,48 +1,116 @@
+# Production Server Configuration
 server:
-  port: 8080
-  servlet:
-    context-path: /api
+  port: ${SERVER_PORT:8080}
+  # REMOVED context-path - it was breaking everything!
+  
+  # Production error handling (less verbose)
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
 
 spring:
   application:
     name: virtual-pet-prod
-  
-  # Production MongoDB
+
+  # Production Database Configuration
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://localhost:27017/virtualpet}
+      auto-index-creation: false  # Manual index management in prod
+      repositories:
+        type: auto
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:}
       timeout: 2000ms
-      database: 0
+      database: ${REDIS_DATABASE:0}
+      lettuce:
+        pool:
+          max-active: 20
+          max-wait: 1000ms
+          max-idle: 10
+          min-idle: 5
+        shutdown-timeout: 200ms
 
-# Production logging
+  # Production Security (strict)
+  security:
+    user:
+      name: ${ADMIN_USERNAME:admin}
+      password: ${ADMIN_PASSWORD:}  # Must be provided via env
+      roles: ADMIN
+
+  # Production Jackson (no pretty printing)
+  jackson:
+    serialization:
+      indent-output: false
+
+# Production Logging (minimal)
 logging:
   level:
     com.snowleopard.virtual_pet: INFO
     org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.springframework.data: WARN
+    org.mongodb.driver: WARN
+    redis.clients: WARN
+    root: WARN
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:
-    name: logs/virtual-pet.log
+    name: ${LOG_FILE:/var/log/virtual-pet/virtual-pet.log}
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
 
-# Production settings
+# Production Virtual Pet Settings (balanced)
 virtual-pet:
   game:
     max-pets-per-user: 5
     starting-coins: 500
     level-up-experience: 100
-  
+    max-level: 50
+
   degradation:
     hunger-rate: 2
     happiness-rate: 1
+    health-rate: 0.5
     energy-regen-rate: 5
 
-# Limited actuator endpoints for production
+  notifications:
+    low-stat-threshold: 20
+    critical-threshold: 10
+
+  # Production CORS (restrictive)
+  cors:
+    allowed-origins:
+      - ${FRONTEND_URL:https://your-domain.com}
+    allowed-methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+      - "PATCH"
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+
+# Production Actuator (limited endpoints)
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+    metrics:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true

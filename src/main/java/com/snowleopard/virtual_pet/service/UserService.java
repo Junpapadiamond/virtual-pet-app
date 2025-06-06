@@ -26,6 +26,9 @@ public class UserService {
 
     @Cacheable(value = "users", key = "#userId")
     public UserResponse getUserById(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new IllegalArgumentException("User ID cannot be empty");
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
         return convertToUserResponse(user);
@@ -39,17 +42,20 @@ public class UserService {
 
     @Transactional
     public UserResponse createUser(CreateUserRequest request) {
+        // Add null checks
+        if (request == null) {
+            throw new IllegalArgumentException("CreateUserRequest cannot be null");
+        }
+
+        if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
+
         log.info("Creating new user: {}", request.getUsername());
-        
-        // Check if username already exists
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username already exists");
-        }
-        
-        // Check if email already exists
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
-        }
 
         User user = new User();
         user.setUsername(request.getUsername());

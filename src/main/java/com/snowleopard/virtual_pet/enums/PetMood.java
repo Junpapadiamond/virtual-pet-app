@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public enum PetMood {
     ECSTATIC("Ecstatic", "😍", 90, 100),
-    HAPPY("Happy", "😊", 70, 89),
-    CONTENT("Content", "😌", 50, 69),
-    NEUTRAL("Neutral", "😐", 30, 49),
-    SAD("Sad", "😢", 10, 29),
+    HAPPY("Happy", "😊", 75, 89),      // Fixed: was 70-89
+    CONTENT("Content", "😌", 50, 74),   // Fixed: was 50-69
+    NEUTRAL("Neutral", "😐", 25, 49),   // Fixed: was 30-49
+    SAD("Sad", "😢", 10, 24),          // Fixed: was 10-29
     DEPRESSED("Depressed", "😭", 0, 9);
 
     private final String name;

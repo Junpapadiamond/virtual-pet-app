@@ -1,4 +1,4 @@
-# Fixed application-dev.yml
+# Development Server Configuration
 server:
   port: 8088
 
@@ -6,38 +6,70 @@ spring:
   application:
     name: virtual-pet-dev
 
-  # Development MongoDB (local)
+  # Development Database Configuration
   data:
     mongodb:
       uri: mongodb://localhost:27017/virtualpet_dev
+      auto-index-creation: true
+      field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
+      repositories:
+        type: auto
     redis:
       host: localhost
       port: 6379
-      timeout: 2000ms
+      timeout: 5000ms
       database: 1
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+        shutdown-timeout: 100ms
 
-# Development logging
+  # Development Security (relaxed)
+  security:
+    user:
+      name: admin
+      password: admin123
+      roles: ADMIN
+
+  # Development Jackson (pretty printing)
+  jackson:
+    serialization:
+      indent-output: true
+
+# Development Logging (verbose)
 logging:
   level:
     com.snowleopard.virtual_pet: DEBUG
     org.springframework.web: DEBUG
     org.springframework.security: DEBUG
+    org.springframework.data.mongodb: DEBUG
+    org.springframework.cache: DEBUG
+    root: INFO
   pattern:
-    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
 
-# Development settings
+# Development Virtual Pet Settings (easier testing)
 virtual-pet:
   game:
     max-pets-per-user: 10
     starting-coins: 1000
     level-up-experience: 50
+    max-level: 20
 
   degradation:
     hunger-rate: 1
     happiness-rate: 1
+    health-rate: 0.2
     energy-regen-rate: 10
 
-# Enable all actuator endpoints for development
+  notifications:
+    low-stat-threshold: 30
+    critical-threshold: 15
+
+# Development Actuator (all endpoints exposed)
 management:
   endpoints:
     web:
@@ -46,3 +78,15 @@ management:
   endpoint:
     health:
       show-details: always
+    env:
+      show-values: always
+
+# Development CORS (more permissive)
+virtual-pet:
+  cors:
+    allowed-origins:
+      - "http://localhost:5173"
+      - "http://localhost:3000"
+      - "http://127.0.0.1:5173"
+      - "http://127.0.0.1:3000"
+      - "http://localhost:8080"

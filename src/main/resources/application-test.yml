@@ -1,3 +1,4 @@
+# Test Server Configuration
 server:
   port: 0  # Random port for testing
 
@@ -5,55 +6,103 @@ spring:
   application:
     name: virtual-pet-test
 
-  # Use embedded MongoDB for testing
+  # Test Database Configuration (Embedded)
   data:
     mongodb:
-      host: localhost
-      port: 0  # Will be set by embedded MongoDB
-      database: virtualpet-test
-
-  # Use embedded Redis for testing
-  data:
+      # Use test containers or embedded MongoDB
+      uri: mongodb://localhost:27017/virtualpet_test
+      auto-index-creation: true
+      repositories:
+        type: auto
     redis:
+      # Use embedded Redis for testing
       host: localhost
-      port: 0  # Will be set by embedded Redis
-      timeout: 2000ms
-      database: 1  # Different database for testing
+      port: 6379
+      timeout: 1000ms
+      database: 15  # Dedicated test database
+      lettuce:
+        pool:
+          max-active: 2
+          max-wait: 100ms
+          max-idle: 2
+          min-idle: 0
 
-  # Disable security for testing
+  # Test Security (minimal)
   security:
     user:
       name: test
       password: test
       roles: USER
 
-# Embedded MongoDB Configuration for Testing
-de:
-  flapdoodle:
-    mongodb:
-      embedded:
-        version: 7.0.4
-        storage:
-          database-dir: target/mongodb-test
-          repl-set-name: rs0
+  # Test Jackson (readable for debugging)
+  jackson:
+    serialization:
+      indent-output: true
 
-# Logging for tests
+  # Test Cache (disabled or in-memory)
+  cache:
+    type: simple  # Use simple in-memory cache for tests
+
+# Test Logging (quiet)
 logging:
   level:
-    com.snowleopard.virtualpet: INFO
-    de.flapdoodle.embed.mongo: WARN
+    com.snowleopard.virtual_pet: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
     org.springframework.data: WARN
     org.springframework.cache: WARN
+    org.springframework.test: INFO
+    de.flapdoodle.embed: WARN
+    org.mongodb.driver: WARN
+    redis.clients: WARN
+    root: WARN
   pattern:
-    console: "%d{HH:mm:ss} - %msg%n"
+    console: "%d{HH:mm:ss} %-5level %logger{36} - %msg%n"
 
-# Disable AI features in tests
+# Test Virtual Pet Settings (fast for testing)
 virtual-pet:
-  ai:
-    enabled: false
+  game:
+    max-pets-per-user: 3
+    starting-coins: 100
+    level-up-experience: 10
+    max-level: 5
 
-  # Faster degradation for testing
   degradation:
     hunger-rate: 10
     happiness-rate: 5
+    health-rate: 2
     energy-regen-rate: 15
+
+  notifications:
+    low-stat-threshold: 50
+    critical-threshold: 25
+
+  # Test CORS (permissive)
+  cors:
+    allowed-origins:
+      - "http://localhost:*"
+    allowed-methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+      - "PATCH"
+      - "OPTIONS"
+
+# Test Actuator (health only)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+# Test-specific features
+test:
+  containers:
+    mongodb:
+      enabled: false  # Set to true if using TestContainers
+    redis:
+      enabled: false  # Set to true if using TestContainers

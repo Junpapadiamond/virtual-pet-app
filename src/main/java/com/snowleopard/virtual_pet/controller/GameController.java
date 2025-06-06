@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/api/game")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class GameController {
@@ -27,19 +27,19 @@ public class GameController {
     private final PetService petService;
     private final UserService userService;
 
-    @GetMapping("/pet-types")
+    @GetMapping("/api/pet-types")
     public ResponseEntity<ApiResponse<List<PetType>>> getPetTypes() {
         List<PetType> petTypes = Arrays.asList(PetType.values());
         return ResponseEntity.ok(ApiResponse.success("Pet types retrieved successfully", petTypes));
     }
 
-    @GetMapping("/activity-types")
+    @GetMapping("/api/activity-types")
     public ResponseEntity<ApiResponse<List<ActivityType>>> getActivityTypes() {
         List<ActivityType> activityTypes = Arrays.asList(ActivityType.values());
         return ResponseEntity.ok(ApiResponse.success("Activity types retrieved successfully", activityTypes));
     }
 
-    @GetMapping("/dashboard/{userId}")
+    @GetMapping("/api/dashboard/{userId}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getDashboard(@PathVariable String userId) {
         log.info("Getting dashboard for user: {}", userId);
         
@@ -68,7 +68,7 @@ public class GameController {
         return ResponseEntity.ok(ApiResponse.success("Dashboard retrieved successfully", dashboard));
     }
 
-    @GetMapping("/recommendations/{userId}")
+    @GetMapping("/api/recommendations/{userId}")
     public ResponseEntity<ApiResponse<List<String>>> getRecommendations(@PathVariable String userId) {
         log.info("Getting recommendations for user: {}", userId);
         
@@ -81,7 +81,7 @@ public class GameController {
         return ResponseEntity.ok(ApiResponse.success("Recommendations retrieved successfully", recommendations));
     }
 
-    @GetMapping("/health")
+    @GetMapping("/api/health")
     public ResponseEntity<ApiResponse<String>> healthCheck() {
         return ResponseEntity.ok(ApiResponse.success("Game service is healthy"));
     }

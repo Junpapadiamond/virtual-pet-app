@@ -15,21 +15,21 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/pets")
+@RequestMapping("/api/pets")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class PetController {
 
     private final PetService petService;
 
-    @GetMapping("/{petId}")
+    @GetMapping("/api/{petId}")
     public ResponseEntity<ApiResponse<PetResponse>> getPet(@PathVariable String petId) {
         log.info("Getting pet with id: {}", petId);
         PetResponse pet = petService.getPetById(petId);
         return ResponseEntity.ok(ApiResponse.success("Pet retrieved successfully", pet));
     }
 
-    @GetMapping("/owner/{ownerId}")
+    @GetMapping("/api/owner/{ownerId}")
     public ResponseEntity<ApiResponse<List<PetResponse>>> getPetsByOwner(@PathVariable String ownerId) {
         log.info("Getting pets for owner: {}", ownerId);
         List<PetResponse> pets = petService.getPetsByOwnerId(ownerId);
@@ -46,7 +46,7 @@ public class PetController {
                 .body(ApiResponse.success("Pet created successfully", pet));
     }
 
-    @PostMapping("/{petId}/feed")
+    @PostMapping("/api/{petId}/feed")
     public ResponseEntity<ApiResponse<PetResponse>> feedPet(
             @PathVariable String petId,
             @RequestParam(defaultValue = "regular food") String foodType,
@@ -56,7 +56,7 @@ public class PetController {
         return ResponseEntity.ok(ApiResponse.success("Pet fed successfully", pet));
     }
 
-    @PostMapping("/{petId}/play")
+    @PostMapping("/api/{petId}/play")
     public ResponseEntity<ApiResponse<PetResponse>> playWithPet(
             @PathVariable String petId,
             @RequestHeader("User-Id") String userId) {
@@ -65,14 +65,14 @@ public class PetController {
         return ResponseEntity.ok(ApiResponse.success("Played with pet successfully", pet));
     }
 
-    @GetMapping("/owner/{ownerId}/attention")
+    @GetMapping("/api/owner/{ownerId}/attention")
     public ResponseEntity<ApiResponse<List<PetResponse>>> getPetsNeedingAttention(@PathVariable String ownerId) {
         log.info("Getting pets needing attention for owner: {}", ownerId);
         List<PetResponse> pets = petService.getPetsNeedingAttention(ownerId);
         return ResponseEntity.ok(ApiResponse.success("Pets needing attention retrieved", pets));
     }
 
-    @GetMapping("/health")
+    @GetMapping("/api/health")
     public ResponseEntity<ApiResponse<String>> healthCheck() {
         return ResponseEntity.ok(ApiResponse.success("Pet service is healthy"));
     }

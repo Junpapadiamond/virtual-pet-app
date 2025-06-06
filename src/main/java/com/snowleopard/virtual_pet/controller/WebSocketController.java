@@ -15,7 +15,7 @@ public class WebSocketController {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/pet-update")
+    @MessageMapping("/api/pet-update")
     @SendTo("/topic/pet-updates")
     public PetResponse handlePetUpdate(PetResponse petUpdate) {
         log.info("Broadcasting pet update for pet: {}", petUpdate.getId());
