@@ -21,7 +21,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/game")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class GameController {
 
     private final PetService petService;

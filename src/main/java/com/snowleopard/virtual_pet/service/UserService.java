@@ -57,13 +57,21 @@ public class UserService {
 
         log.info("Creating new user: {}", request.getUsername());
 
+        // Check for existing username or email
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setTimezone(request.getTimezone());
         user.setLastLoginDate(LocalDateTime.now());
-        
+
         User savedUser = userRepository.save(user);
         log.info("User created successfully: {}", savedUser.getId());
         
