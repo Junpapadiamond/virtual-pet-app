@@ -69,6 +69,15 @@ virtual-pet:
     low-stat-threshold: 30
     critical-threshold: 15
 
+  # Development CORS (more permissive)
+  cors:
+    allowed-origins:
+      - "http://localhost:5173"
+      - "http://localhost:3000"
+      - "http://127.0.0.1:5173"
+      - "http://127.0.0.1:3000"
+      - "http://localhost:8080"
+
 # Development Actuator (all endpoints exposed)
 management:
   endpoints:
@@ -80,13 +89,3 @@ management:
       show-details: always
     env:
       show-values: always
-
-# Development CORS (more permissive)
-virtual-pet:
-  cors:
-    allowed-origins:
-      - "http://localhost:5173"
-      - "http://localhost:3000"
-      - "http://127.0.0.1:5173"
-      - "http://127.0.0.1:3000"
-      - "http://localhost:8080"
